@@ -7,22 +7,20 @@ var takeAmount = 10;
 function getRequests(mode) {
   // your code here...
 
-    var functionsOnSuccess = [
-        ['exampleOnSuccessFunction', 'tbl_requests'],
-    ];
-
-    ajax('userConnection/getSentRequests','get', functionsOnSuccess);
+    $("#suggestion_section").hide();
+    $("#sent_section").show();
+    $("#received_section").hide();
+    $("#connection_section").hide();
 
 }
 
 function getReceived(mode) {
     // your code here...
 
-    var functionsOnSuccess = [
-        ['exampleOnSuccessFunction', 'tbl_requests'],
-    ];
-
-    ajax('userConnection/getReceivedRequests','get', functionsOnSuccess);
+    $("#suggestion_section").hide();
+    $("#sent_section").hide();
+    $("#received_section").show();
+    $("#connection_section").hide();
 
 }
 
@@ -34,11 +32,10 @@ function getMoreRequests(mode) {
 function getConnections() {
   // your code here...
 
-    var functionsOnSuccess = [
-        ['exampleOnSuccessFunction', 'tbl_connection'],
-    ];
-
-    ajax('userConnection/getConnections','get', functionsOnSuccess);
+    $("#suggestion_section").hide();
+    $("#sent_section").hide();
+    $("#received_section").hide();
+    $("#connection_section").show();
 }
 
 function getMoreConnections() {
@@ -58,15 +55,12 @@ function getMoreConnectionsInCommon(userId, connectionId) {
 function getSuggestions() {
   // your code here...
 
- /*   var form = ajaxForm([
-        ['exampleVariable', null],
-    ]);
-*/
-    var functionsOnSuccess = [
-        ['exampleOnSuccessFunction', 'tbl_suggestion'],
-    ];
+    $("#suggestion_section").show();
+    $("#sent_section").hide();
+    $("#received_section").hide();
+    $("#connection_section").hide();
 
-    ajax('userConnection/getNonConnectedUsers','get', functionsOnSuccess);
+    $("#skeleton").hide();
 }
 
 function getMoreSuggestions() {
@@ -82,7 +76,7 @@ function sendRequest(suggestionId) {
     ]);
 
     var functionsOnSuccess = [
-        ['exampleOnSuccessFunction', ['content','tbl_suggestion']],
+        ['exampleOnSuccessFunction', 'x-suggestion'],
     ];
 
     ajax('userConnection/connectedUser','post', functionsOnSuccess, form);
@@ -95,7 +89,7 @@ function deleteRequest(requestId) {
     ]);
 
     var functionsOnSuccess = [
-        ['exampleOnSuccessFunction', ['content','tbl_requests']],
+        ['exampleOnSuccessFunction', 'x-request'],
     ];
 
     ajax('userConnection/deleteRequest','post', functionsOnSuccess, form);
@@ -108,7 +102,7 @@ function acceptRequest(requestId) {
     ]);
 
     var functionsOnSuccess = [
-        ['exampleOnSuccessFunction', ['content','tbl_requests']],
+        ['exampleOnSuccessFunction', 'x-request'],
     ];
 
     ajax('userConnection/acceptRequest','post', functionsOnSuccess, form);
@@ -117,17 +111,18 @@ function acceptRequest(requestId) {
 
 function removeConnection(connectionId) {
 
+
     var form = ajaxForm([
         ['connectionId', connectionId],
     ]);
 
     var functionsOnSuccess = [
-        ['exampleOnSuccessFunction', ['content','tbl_connection']],
+        ['exampleOnSuccessFunction', 'x-connection'],
     ];
 
     ajax('userConnection/removeConnection','post', functionsOnSuccess, form);
 }
 
 $(function () {
-  // getSuggestions();
+  getSuggestions();
 });

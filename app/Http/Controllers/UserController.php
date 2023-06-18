@@ -4,8 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\FriendRequest;
 use App\Models\User;
+use App\View\Components\Connections;
+use App\View\Components\Received;
+use App\View\Components\Sent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\View\Components\Suggestion;
+use PhpParser\Node\Expr\New_;
+
 
 class UserController extends Controller
 {
@@ -18,53 +24,28 @@ class UserController extends Controller
     {
         $currentUser = auth()->user();
 
-        $connectedUserIds = FriendRequest::where('sender_id', $currentUser->id)
-            ->orWhere('recipient_id', $currentUser->id)
-            ->pluck('sender_id')
-            ->concat(FriendRequest::where('sender_id', $currentUser->id)
-                ->orWhere('recipient_id', $currentUser->id)
-                ->pluck('recipient_id'))
-            ->unique();
-
-        $nonConnectedUserIds = User::whereNotIn('id', $connectedUserIds->push($currentUser->id))
-            ->pluck('id');
-
-        $nonConnectedUsers = User::whereIn('id', $nonConnectedUserIds)
-            ->paginate(10); // Specify the number of items per page
-
+        $nonConnectedUsers = New Suggestion();
 
         return json_encode($nonConnectedUsers);
     }
 
     public function getConnections()
     {
-        $connections = FriendRequest::where('accepted', 1)
-            ->where(function ($query) {
-                $query->where('sender_id', auth()->user()->id)
-                    ->orWhere('recipient_id', auth()->user()->id);
-            })
-        ->with(['sender', 'recipient'])
-        ->paginate(10); // Specify the number of items per page
+        $connections = New Connections();
 
         return json_encode($connections);
     }
 
     public function getSentRequests()
     {
-        $sentRequests = FriendRequest::with(['sender', 'recipient'])
-            ->where('sender_id', auth()->id())
-            ->where('accepted', 0)
-            ->paginate(10);
+        $sentRequests = new Sent();
 
         return json_encode(['requests' => $sentRequests , 'mode' => 'sent']);
     }
 
     public function getReceivedRequests()
     {
-        $receivedRequests = FriendRequest::with(['sender', 'recipient'])
-            ->where('recipient_id', auth()->id())
-            ->where('accepted', 0)
-            ->paginate(10);
+        $receivedRequests = new Received();
 
         return json_encode(['requests' => $receivedRequests , 'mode' => 'received']);
     }

@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\View\Components\Connections;
+use App\View\Components\Received;
+use App\View\Components\Sent;
+use App\View\Components\Suggestion;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -23,6 +27,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $suggestions = New Suggestion();
+        $sent = New Sent();
+        $received = New Received();
+        $connections = New Connections();
+        return view('home', ['suggestions' => $suggestions, 'sent' => $sent, 'received' => $received, 'connections' => $connections]);
     }
 }

@@ -30,6 +30,8 @@ function ajax(url, method, functionsOnSuccess, form) {
     functionsOnSuccess = [];
   }
 
+    $("#skeleton").show();
+
   $.ajax({
     url: url,
     type: method,
@@ -84,90 +86,16 @@ function exampleOnSuccessFunction(section_id , response) {
   // hide skeletons
   // show content
 
-  console.log(section_id);
-  console.log(response);
+  /*console.log(section_id);
+  console.log(response);*/
 
+  if(section_id == 'x-suggestion'){
+      $('x-suggestion').replaceWith(response['suggestions']);
+  }else if(section_id == 'x-request'){
+      $(section_id).replaceWith(response['request']);
+  }else if(section_id == 'x-connection'){
+      $(section_id).replaceWith(response['connection']);
+  }
 
-    var newHtml = '';
-    $('#'+section_id).html('');
-
-    if (section_id == 'tbl_suggestion'){
-
-      for (let i = 0; i< response['data'].length; i++){
-          id = response['data'][i]['id'];
-          name = response['data'][i]['name'];
-          email = response['data'][i]['email'];
-          newHtml += '<div class="d-flex justify-content-between">' +
-              '<table class="ms-1" id="tbl_suggestion">' +
-              '<td class="align-middle">'+name+'</td>' +
-              '<td class="align-middle"> - </td>' +
-              '<td class="align-middle">'+email+'</td>' +
-              '<td class="align-middle"></td>' +
-              '</table>' +
-              '<div><button id="create_request_btn_" class="btn btn-primary me-1" onclick="sendRequest('+id+')">Connect</button></div>' +
-              '</div>';
-      }
-
-      $('#SuggestionsCounter').text(response['total'])
-    }
-
-    if (section_id == 'tbl_requests'){
-
-        console.log(response)
-        for (let i = 0; i< response['requests']['data'].length; i++){
-            id = response['requests']['data'][i]['id'];
-            name = response['requests']['data'][i]['recipient']['name'];
-            email = response['requests']['data'][i]['recipient']['email'];
-
-            if (response['mode'] == 'sent'){
-                btnHtml = '<button id="cancel_request_btn_" class="btn btn-danger me-1" onclick="deleteRequest('+id+')">Withdraw Request</button>';
-
-                $('#RequestsCounter').text(response['requests']['total'])
-            }else{
-                btnHtml = '<button id="accept_request_btn_" class="btn btn-primary me-1" onclick="acceptRequest('+id+')">Accept</button>' ;
-
-                $('#ReceivedCounter').text(response['requests']['total'])
-            }
-
-            newHtml += '<div class="d-flex justify-content-between">' +
-                        '<table class="ms-1">' +
-                        '<td class="align-middle">'+name+'</td>' +
-                        '<td class="align-middle"> - </td>' +
-                        '<td class="align-middle">'+email+'</td>' +
-                        '<td class="align-middle">' +
-                        '</table>' +
-                        '<div> '+btnHtml+' ' +
-                        '</div>' +
-                        '</div>';
-        }
-    }
-
-    if (section_id == 'tbl_connection'){
-
-        console.log(response)
-        for (let i = 0; i< response['data'].length; i++){
-            id = response['data'][i]['id'];
-            name = response['data'][i]['recipient']['name'];
-            email = response['data'][i]['recipient']['email'];
-
-            btnHtml = '<button style="width: 220px" id="get_connections_in_common_" class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_" aria-expanded="false" aria-controls="collapseExample"> Connections in common () </button>' +
-                      '<button id="create_request_btn_" class="btn btn-danger me-1" onclick="removeConnection('+id+')">Remove Connection</button>';
-
-            newHtml += '<div class="d-flex justify-content-between">\n' +
-                        '<table class="ms-1">' +
-                        '<td class="align-middle">'+name+'</td>' +
-                        '<td class="align-middle"> - </td>' +
-                        '<td class="align-middle">'+email+'</td>' +
-                        '<td class="align-middle">' +
-                        '</table>' +
-                        '<div> '+btnHtml+' ' +
-                        '</div>' +
-                        '</div>';
-        }
-
-        $('#ConnectionsCounter').text(response['total'])
-    }
-
-
-    $('#'+section_id).html(newHtml);
+  $("#skeleton").hide();
 }
